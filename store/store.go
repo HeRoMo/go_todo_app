@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	Tasks = &TaskStore{Tasks: map[int]*entity.Task{}}
+	Tasks = &TaskStore{Tasks: map[entity.TaskID]*entity.Task{}}
 
 	ErrNotFound = errors.New("not found")
 )
@@ -15,13 +15,13 @@ var (
 type TaskStore struct {
 	// 動作確認用の仮実装なのであえて export している。
 	LastID entity.TaskID
-	Tasks  map[int]*entity.Task
+	Tasks  map[entity.TaskID]*entity.Task
 }
 
 func (ts *TaskStore) Add(t *entity.Task) (int, error) {
 	ts.LastID++
 	t.ID = ts.LastID
-	ts.Tasks[int(t.ID)] = t
+	ts.Tasks[t.ID] = t
 	return int(t.ID), nil
 }
 
