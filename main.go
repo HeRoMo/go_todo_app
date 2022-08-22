@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"go_todo_app/config"
 	"log"
 	"net"
 	"os"
+
+	"github.com/HeRoMo/go_todo_app/config"
 )
 
 func main() {
