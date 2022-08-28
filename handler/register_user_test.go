@@ -13,8 +13,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func TestAddTask(t *testing.T) {
-	t.Parallel()
+func TestRegisterUser(t *testing.T) {
 	type want struct {
 		status  int
 		rspFile string
@@ -24,17 +23,17 @@ func TestAddTask(t *testing.T) {
 		want    want
 	}{
 		"ok": {
-			reqFile: "testdata/add_task/ok_req.json.golden",
+			reqFile: "testdata/register_user/ok_req.json.golden",
 			want: want{
 				status:  http.StatusOK,
-				rspFile: "testdata/add_task/ok_rsp.json.golden",
+				rspFile: "testdata/register_user/ok_rsp.json.golden",
 			},
 		},
 		"badRequest": {
-			reqFile: "testdata/add_task/bad_req.json.golden",
+			reqFile: "testdata/register_user/bad_req.json.golden",
 			want: want{
 				status:  http.StatusBadRequest,
-				rspFile: "testdata/add_task/bad_rsp.json.golden",
+				rspFile: "testdata/register_user/bad_rsp.json.golden",
 			},
 		},
 	}
@@ -46,23 +45,23 @@ func TestAddTask(t *testing.T) {
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(
 				http.MethodPost,
-				"/tasks",
-				bytes.NewReader(testutil.LoadFile(t, tt.reqFile)))
-
-			moq := &AddTaskServiceMock{}
-			moq.AddTaskFunc = func(
-				ctx context.Context, title string,
-			) (*entity.Task, error) {
-				if tt.want.status == http.StatusOK {
-					return &entity.Task{ID: 1}, nil
-				}
-				return nil, errors.New("error from mock")
+				"/register",
+				bytes.NewReader(testutil.LoadFile(t, tt.reqFile)),
+			)
+			moq := &RegisterUserServiceMock{
+				RegisterUserFunc: func(ctx context.Context, name string, password string, role string) (*entity.User, error) {
+					if tt.want.status == http.StatusOK {
+						return &entity.User{ID: 1}, nil
+					}
+					return nil, errors.New("error from mock")
+				},
 			}
-			sut := AddTask{
+
+			sut := RegisterUser{
 				Service:   moq,
 				Validator: validator.New(),
 			}
-			sut.ServeHTTP(w, r)
+			sut.ServerHTTP(w, r)
 			resp := w.Result()
 			testutil.AssertResponse(t,
 				resp, tt.want.status, testutil.LoadFile(t, tt.want.rspFile),
