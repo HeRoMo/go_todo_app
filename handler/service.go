@@ -6,7 +6,7 @@ import (
 	"github.com/HeRoMo/go_todo_app/entity"
 )
 
-//go:generate go run github.com/matryer/moq -out moq_test.go . ListTaskService AddTaskService
+//go:generate go run github.com/matryer/moq -out moq_test.go . ListTaskService AddTaskService RegisterUserService
 type ListTaskService interface {
 	ListTasks(ctx context.Context) (entity.Tasks, error)
 }
