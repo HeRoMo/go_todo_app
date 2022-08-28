@@ -46,7 +46,7 @@ func TestAddTask(t *testing.T) {
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(
 				http.MethodPost,
-				"/status",
+				"/tasks",
 				bytes.NewReader(testutil.LoadFile(t, tt.reqFile)))
 
 			moq := &AddTaskServiceMock{}
