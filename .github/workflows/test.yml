@@ -47,6 +47,7 @@ jobs:
       - name: go test
         env:
           TODO_DB_PORT: 3306
+          TODO_REDIS_PORT: 6379
         run: go test ./... -coverprofile=coverage.out
       - name: report coverage
         uses: k1LoW/octocov-action@v0
