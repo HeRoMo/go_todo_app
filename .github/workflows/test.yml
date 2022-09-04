@@ -22,6 +22,15 @@ jobs:
           MYSQL_USER: todo
           MYSQL_PASSWORD: todo
           MYSQL_DATABASE: todo
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -38,6 +47,7 @@ jobs:
       - name: go test
         env:
           TODO_DB_PORT: 3306
+          TODO_REDIS_PORT: 6379
         run: go test ./... -coverprofile=coverage.out
       - name: report coverage
         uses: k1LoW/octocov-action@v0
